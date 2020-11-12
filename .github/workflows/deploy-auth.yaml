@@ -16,9 +16,9 @@ jobs:
       - run: cd auth && docker build -t oluwatobi123/auth .
       - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD   
         env:
-          DOCKET_USERNAME: ${{ secrets.DOCKET_USERNAME }}
-          DOCKET_PASSWORD: ${{ secrets.DOCKET_PASSWORD }}
-      - run: docket push oluwatobi123/auth
+          DOCKET_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKET_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      - run: docker push oluwatobi123/auth
       - uses: digitalocean/action-doctl@v2
         with: 
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
