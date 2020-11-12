@@ -19,5 +19,10 @@ jobs:
           DOCKET_USERNAME: ${{ secrets.DOCKET_USERNAME }}
           DOCKET_PASSWORD: ${{ secrets.DOCKET_PASSWORD }}
       - run: docket push oluwatobi123/auth
+      - uses: digitalocean/action-doctl@v2
+        with: 
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - run: doctl kubernetes cluster kubeconfig save ticketing
+      - run: kubectl rollout restart deployment auth-depl
      
                                                                                                                                     
