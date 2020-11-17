@@ -83,10 +83,10 @@ it('returns a 201 with valid inputs', async () => {
   const stripeCharge = stripeCharges.data.find((charge) => {
     return charge.amount === price * 100;
   });
-  
+
   expect(stripeCharge).toBeDefined();
-  expect(stripeCharge!.currency).toEqual('ngn');
-  
+  expect(stripeCharge!.currency).toEqual('usd');
+
   const payment = await Payment.findOne({
     orderId: order.id,
     stripeId: stripeCharge!.id,

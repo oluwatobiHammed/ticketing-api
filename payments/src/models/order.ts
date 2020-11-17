@@ -1,50 +1,40 @@
 import mongoose from 'mongoose';
-import { OrderStatus } from '@sgtickets/common'
-import { updateIfCurrentPlugin} from 'mongoose-update-if-current'
-
-export { OrderStatus }
-//An interface that describes the properties
-//That are required to create a new User
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
+import { OrderStatus } from '@sgtickets/common';
 
 interface OrderAttrs {
   id: string;
   version: number;
   userId: string;
-  status: OrderStatus;
   price: number;
- 
+  status: OrderStatus;
 }
 
-// An interface that describes the propertises
-// That a model has
+interface OrderDoc extends mongoose.Document {
+  version: number;
+  userId: string;
+  price: number;
+  status: OrderStatus;
+}
+
 interface OrderModel extends mongoose.Model<OrderDoc> {
   build(attrs: OrderAttrs): OrderDoc;
 }
 
-// An interface that describes the propertises
-// That a user document has
-interface OrderDoc extends mongoose.Document {
-  userId: string;
-  status: OrderStatus;
-  price: number;
-  version: number;
-  
-}
 const orderSchema = new mongoose.Schema(
   {
     userId: {
       type: String,
-      require: true,
-    },
-    status: {
-      type: String,
-      require: true,
+      required: true,
     },
     price: {
       type: Number,
-      require: true,
+      required: true,
     },
-  
+    status: {
+      type: String,
+      required: true,
+    },
   },
   {
     toJSON: {
@@ -56,8 +46,8 @@ const orderSchema = new mongoose.Schema(
   }
 );
 
-orderSchema.set('versionKey', 'version')
-orderSchema.plugin(updateIfCurrentPlugin)
+orderSchema.set('versionKey', 'version');
+orderSchema.plugin(updateIfCurrentPlugin);
 
 orderSchema.statics.build = (attrs: OrderAttrs) => {
   return new Order({
@@ -65,7 +55,7 @@ orderSchema.statics.build = (attrs: OrderAttrs) => {
     version: attrs.version,
     price: attrs.price,
     userId: attrs.userId,
-    status: attrs.status
+    status: attrs.status,
   });
 };
 
