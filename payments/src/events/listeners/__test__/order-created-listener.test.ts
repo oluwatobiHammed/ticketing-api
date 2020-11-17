@@ -1,52 +1,47 @@
-import { OrderCreatedEvent, OrderStatus } from "@sgtickets/common"
-import  mongoose  from "mongoose"
-import { Message } from "node-nats-streaming"
-import { Order } from "../../../models/order"
-import { natsWrapper } from "../../../nats-wrapper"
-import { OrderCreatedListener } from "../order-created-listener"
-
+import mongoose from 'mongoose';
+import { Message } from 'node-nats-streaming';
+import { OrderCreatedEvent, OrderStatus } from '@sgtickets/common';
+import { natsWrapper } from '../../../nats-wrapper';
+import { OrderCreatedListener } from '../order-created-listener';
+import { Order } from '../../../models/order';
 
 const setup = async () => {
-// Create and instance of the listener
-const listener = new OrderCreatedListener(natsWrapper.client)
+  const listener = new OrderCreatedListener(natsWrapper.client);
 
-// Create and save a ticket
-
-// Create the fake data event
-const data: OrderCreatedEvent['data'] = {
-  id: mongoose.Types.ObjectId().toHexString(),
+  const data: OrderCreatedEvent['data'] = {
+    id: mongoose.Types.ObjectId().toHexString(),
     version: 0,
+    expiresAt: 'alskdjf',
+    userId: 'alskdjf',
     status: OrderStatus.Created,
-    userId: 'kjhfAKHF',
-    expiresAt: 'aasdsfgfdg',
     ticket: {
-        id: 'ankhda',
-        price: 10
-    }
-}
-// @ts-ignore
-const msg: Message = {
-  ack: jest.fn()
-}
+      id: 'alskdfj',
+      price: 10,
+    },
+  };
 
-return{ listener, data, msg}
-}
+  // @ts-ignore
+  const msg: Message = {
+    ack: jest.fn(),
+  };
 
-it('replicate the order info', async () => {
-const { listener, data, msg} = await setup()
+  return { listener, data, msg };
+};
 
-await listener.onMessage(data, msg)
+it('replicates the order info', async () => {
+  const { listener, data, msg } = await setup();
 
-const order = await Order.findById(data.id)
+  await listener.onMessage(data, msg);
 
-expect(order!.price).toEqual(data.ticket.price)
-})
+  const order = await Order.findById(data.id);
+
+  expect(order!.price).toEqual(data.ticket.price);
+});
 
 it('acks the message', async () => {
-  const { listener, data, msg} = await setup()
+  const { listener, data, msg } = await setup();
 
-  await listener.onMessage(data, msg)
+  await listener.onMessage(data, msg);
 
-  expect(msg.ack).toHaveBeenCalled()
-})
-
+  expect(msg.ack).toHaveBeenCalled();
+});

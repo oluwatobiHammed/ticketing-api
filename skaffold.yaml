@@ -4,7 +4,6 @@ deploy:
   kubectl:
     manifests:
       - ./infra/k8s/*
-      - ./infra/k8s-dev/*
 build:
   local:
     push: false
@@ -41,7 +40,6 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
-
     - image: oluwatobi123/expiration
       context: expiration
       docker:
@@ -50,7 +48,6 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
-
     - image: oluwatobi123/payments
       context: payments
       docker:
