@@ -27,7 +27,7 @@ app.use(signupRouter);
 
 // example of using this top-level; note the use of haltOnTimedout
 // after every middleware; it will stop the request flow on a timeout
-app.use(timeout('400s'))
+app.use(timeout('1000s'))
 
 app.use(haltOnTimedout)
 
